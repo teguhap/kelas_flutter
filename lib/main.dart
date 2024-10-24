@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:mulai_flutter_2/theme/theme.dart';
 import 'package:mulai_flutter_2/views/home/home%20copy.dart';
 import 'package:mulai_flutter_2/views/home/home.dart';
 import 'package:mulai_flutter_2/views/login/login_view.dart';
@@ -18,10 +19,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Mulai Flutter',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
+      theme: ligthTheme,
       routes: {
         '/home': (context) => HomeView(),
         '/profile': (context) => ProfileView(),
