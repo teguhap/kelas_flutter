@@ -1,13 +1,37 @@
 import 'package:flutter/material.dart';
 import 'package:mulai_flutter_2/config/config.dart';
 import 'package:mulai_flutter_2/views/home/model/film_model.dart';
+import 'package:mulai_flutter_2/views/home/service/model/genre_list.dart';
 
 class RowFilm extends StatelessWidget {
   FilmModel filmModel;
+  List<Genre> listOfGenre;
   RowFilm({
     super.key,
     required this.filmModel,
+    required this.listOfGenre,
   });
+
+  String generateGenre() {
+    String genres = '';
+
+    List<String> genreNames = [];
+
+    filmModel.genreIds?.forEach((genre) {
+      final genreName = listOfGenre
+          .firstWhere(
+            (gen) => gen.id == genre,
+            orElse: () => Genre(),
+          )
+          .name;
+
+      genreNames.add(genreName ?? '');
+    });
+
+    genres = genreNames.join(', ');
+
+    return genres;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +64,7 @@ class RowFilm extends StatelessWidget {
               ),
             ),
             Text(
-              filmModel.overview ?? '',
+              generateGenre(),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(

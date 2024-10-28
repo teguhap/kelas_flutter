@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart';
 import 'package:mulai_flutter_2/config/config.dart';
 import 'package:mulai_flutter_2/views/home/model/film_model.dart';
+import 'package:mulai_flutter_2/views/home/service/model/genre_list.dart';
 import 'package:mulai_flutter_2/views/home/service/model/nowplaying_response_model.dart';
 import 'package:mulai_flutter_2/views/home/service/model/populafilm_response_model.dart';
 
@@ -42,6 +43,28 @@ class GetFilm {
             PopularFilmResponseModel.fromJson(jsonDecode(response.body));
 
         return popularFilmResponseModel.results ?? [];
+      } else {
+        return [];
+      }
+    } on Exception catch (e) {
+      return [];
+    }
+  }
+
+  Future<List<Genre>> getListGenre() async {
+    String url =
+        '${Config.baseUrl}/3/genre/movie/list?api_key=${Config.apiKey}';
+
+    try {
+      Response response = await get(Uri.parse(url));
+
+      print(response.body);
+
+      if (response.statusCode == 200 || response.statusCode == 203) {
+        GenreListJsonModel genreListJsonModel =
+            GenreListJsonModel.fromJson(jsonDecode(response.body));
+
+        return genreListJsonModel.genres ?? [];
       } else {
         return [];
       }

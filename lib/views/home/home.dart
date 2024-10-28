@@ -6,6 +6,7 @@ import 'package:mulai_flutter_2/theme/my_style.dart';
 import 'package:mulai_flutter_2/theme/theme.dart';
 import 'package:mulai_flutter_2/views/home/model/film_model.dart';
 import 'package:mulai_flutter_2/views/home/service/get_film.dart';
+import 'package:mulai_flutter_2/views/home/service/model/genre_list.dart';
 import 'package:mulai_flutter_2/views/home/views/category_view.dart';
 import 'package:mulai_flutter_2/views/home/widgets/row_film.dart';
 import 'package:mulai_flutter_2/widgets/custom_text.dart';
@@ -23,6 +24,7 @@ class _HomeViewState extends State<HomeView> {
   List<Color> listOfColors = [Colors.red, Colors.yellow, Colors.green];
   List<FilmModel> listOfPopularFilm = [];
   List<FilmModel> listOfNowPlaying = [];
+  List<Genre> listOfGenre = [];
   int currentIndex = 0;
   bool isLoadingPopular = true;
 
@@ -35,6 +37,7 @@ class _HomeViewState extends State<HomeView> {
   getFilm() async {
     listOfNowPlaying = await GetFilm().getNowPlayingFilm();
     listOfPopularFilm = await GetFilm().getNowPopularFilm();
+    listOfGenre = await GetFilm().getListGenre();
     // await Future.delayed(Duration(seconds: 1));
     isLoadingPopular = false;
     setState(() {});
@@ -288,6 +291,7 @@ class _HomeViewState extends State<HomeView> {
                       ...listOfPopularFilm.map(
                         (film) => RowFilm(
                           filmModel: film,
+                          listOfGenre: listOfGenre,
                         ),
                       ),
                     ],
