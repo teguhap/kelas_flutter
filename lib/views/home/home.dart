@@ -1,67 +1,41 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:mulai_flutter_2/config/config.dart';
-import 'package:mulai_flutter_2/theme/my_style.dart';
 import 'package:mulai_flutter_2/theme/theme.dart';
+import 'package:mulai_flutter_2/views/home/controller/home_controller.dart';
 import 'package:mulai_flutter_2/views/home/model/film_model.dart';
-import 'package:mulai_flutter_2/views/home/service/get_film.dart';
-import 'package:mulai_flutter_2/views/home/service/model/genre_list.dart';
-import 'package:mulai_flutter_2/views/home/views/category_view.dart';
 import 'package:mulai_flutter_2/views/home/widgets/row_film.dart';
-import 'package:mulai_flutter_2/widgets/custom_text.dart';
 
-class HomeView extends StatefulWidget {
+class HomeView extends GetView<HomeController> {
   String? nama;
 
   HomeView({super.key, this.nama});
 
   @override
-  State<HomeView> createState() => _HomeViewState();
-}
-
-class _HomeViewState extends State<HomeView> {
-  List<Color> listOfColors = [Colors.red, Colors.yellow, Colors.green];
-  List<FilmModel> listOfPopularFilm = [];
-  List<FilmModel> listOfNowPlaying = [];
-  List<Genre> listOfGenre = [];
-  int currentIndex = 0;
-  bool isLoadingPopular = true;
-
-  @override
-  void initState() {
-    super.initState();
-    getFilm();
-  }
-
-  getFilm() async {
-    listOfNowPlaying = await GetFilm().getNowPlayingFilm();
-    listOfPopularFilm = await GetFilm().getNowPopularFilm();
-    listOfGenre = await GetFilm().getListGenre();
-    // await Future.delayed(Duration(seconds: 1));
-    isLoadingPopular = false;
-    setState(() {});
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: SafeArea(
-      child: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 10),
-          child: Column(
-            children: [
-              _appBar(),
-              _slideImage(),
-              _indicator(),
-              _rowFilm('Popular Film'),
-              _rowFilm('Top Film'),
-            ],
+    return GetBuilder<HomeController>(initState: (state) {
+      controller.init();
+    }, builder: (context) {
+      return Scaffold(
+          body: SafeArea(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 10),
+            child: Obx(
+              () => Column(
+                children: [
+                  _appBar(),
+                  _slideImage(),
+                  _indicator(),
+                  _rowFilm('Popular Film', controller.listOfPopularFilm),
+                  _rowFilm('Top Film', controller.listOfTopRatedFilm),
+                ],
+              ),
+            ),
           ),
         ),
-      ),
-    ));
+      ));
+    });
   }
 
   _appBar() {
@@ -87,7 +61,7 @@ class _HomeViewState extends State<HomeView> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Text(
-                    'Hi, ${widget.nama}',
+                    'Hi, ${nama}',
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
                   ),
                   SizedBox(
@@ -128,88 +102,98 @@ class _HomeViewState extends State<HomeView> {
     return Container(
         margin: EdgeInsets.only(top: 30),
         height: 200,
-        child: PageView.builder(
-          // itemCount: listOfColors.length,
-          onPageChanged: (value) {
-            var realIndex = value % listOfNowPlaying.length;
-            setState(() {
-              currentIndex = realIndex;
-            });
-          },
-          itemBuilder: (context, index) {
-            return Container(
-              height: 100,
-              margin: EdgeInsets.symmetric(horizontal: 20),
-              width: double.infinity,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: NetworkImage(
-                    '${Config.imageUrl}/original/${listOfNowPlaying[currentIndex].backdropPath}',
+        child: controller.isLoadingNowPlaying.value
+            ? Center(
+                child: Padding(
+                  padding: EdgeInsets.only(top: 20),
+                  child: CircularProgressIndicator(
+                    color: colorPrimary,
                   ),
-                  fit: BoxFit.cover,
                 ),
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: Stack(
-                children: [
-                  Container(
-                    width: double.infinity,
-                    height: 200,
+              )
+            : PageView.builder(
+                // itemCount: listOfColors.length,
+                onPageChanged: (value) {
+                  var realIndex = value % controller.listOfNowPlaying.length;
+
+                  controller.currentIndex.value = realIndex;
+                },
+                itemBuilder: (context, index) {
+                  return Container(
+                    height: 100,
+                    margin: EdgeInsets.symmetric(horizontal: 20),
+                    width: Get.height,
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(16),
-                      gradient: LinearGradient(colors: [
-                        colorPrimary,
-                        colorPrimary.withOpacity(0.9),
-                        Colors.transparent,
-                      ]),
-                    ),
-                  ),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width / 2,
-                    child: Padding(
-                      padding: EdgeInsets.all(20),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            listOfNowPlaying[index].title ?? '',
-                            maxLines: 2,
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Text(
-                            listOfNowPlaying[index].overview ?? '',
-                            maxLines: 3,
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 10,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                          Spacer(),
-                          ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.white,
-                            ),
-                            onPressed: () {},
-                            child: Text('Watch Now'),
-                          )
-                        ],
+                      image: DecorationImage(
+                        image: NetworkImage(
+                          '${Config.imageUrl}/original/${controller.listOfNowPlaying[controller.currentIndex.value].backdropPath}',
+                        ),
+                        fit: BoxFit.cover,
                       ),
+                      borderRadius: BorderRadius.circular(16),
                     ),
-                  )
-                ],
-              ),
-            );
-          },
-        ));
+                    child: Stack(
+                      children: [
+                        Container(
+                          width: double.infinity,
+                          height: 200,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(16),
+                            gradient: LinearGradient(colors: [
+                              colorPrimary,
+                              colorPrimary.withOpacity(0.9),
+                              Colors.transparent,
+                            ]),
+                          ),
+                        ),
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width / 2,
+                          child: Padding(
+                            padding: EdgeInsets.all(20),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  controller.listOfNowPlaying[index].title ??
+                                      '',
+                                  maxLines: 2,
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 18,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Text(
+                                  controller.listOfNowPlaying[index].overview ??
+                                      '',
+                                  maxLines: 3,
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 10,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                                Spacer(),
+                                ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.white,
+                                  ),
+                                  onPressed: () {},
+                                  child: Text('Watch Now'),
+                                )
+                              ],
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  );
+                },
+              ));
   }
 
   _indicator() {
@@ -218,8 +202,8 @@ class _HomeViewState extends State<HomeView> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          for (var i = 0; i < listOfNowPlaying.length; i++)
-            currentIndex == i
+          for (var i = 0; i < controller.listOfNowPlaying.length; i++)
+            controller.currentIndex == i
                 ? Container(
                     width: 24,
                     height: 8,
@@ -252,7 +236,7 @@ class _HomeViewState extends State<HomeView> {
     );
   }
 
-  _rowFilm(String title) {
+  _rowFilm(String title, List<FilmModel> listOfFilm) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
       child: Column(
@@ -277,7 +261,7 @@ class _HomeViewState extends State<HomeView> {
           SizedBox(
             height: 20,
           ),
-          isLoadingPopular
+          controller.isLoadingPopular.value
               ? Padding(
                   padding: EdgeInsets.only(top: 20),
                   child: CircularProgressIndicator(
@@ -288,10 +272,10 @@ class _HomeViewState extends State<HomeView> {
                   scrollDirection: Axis.horizontal,
                   child: Row(
                     children: [
-                      ...listOfPopularFilm.map(
+                      ...listOfFilm.map(
                         (film) => RowFilm(
                           filmModel: film,
-                          listOfGenre: listOfGenre,
+                          listOfGenre: controller.listOfGenre,
                         ),
                       ),
                     ],

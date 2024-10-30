@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:mulai_flutter_2/views/home/home.dart';
 
 class LoginView extends StatelessWidget {
@@ -152,13 +153,14 @@ class LoginView extends StatelessWidget {
                         backgroundColor: const Color(0xff162D3A),
                       ),
                       onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => HomeView(
-                                nama: teEmailController.text,
-                              ),
-                            ));
+                        // Navigator.push(
+                        //     context,
+                        //     MaterialPageRoute(
+                        //       builder: (context) => HomeView(
+                        //         nama: teEmailController.text,
+                        //       ),
+                        //     ));
+                        Get.to(HomeView());
                       },
                       child: const Text(
                         'Sign in',

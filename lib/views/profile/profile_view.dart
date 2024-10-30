@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:mulai_flutter_2/views/home/controller/home_controller.dart';
 
 class ProfileView extends StatelessWidget {
   String nama = "Teguh";
-
+  HomeController homeController = Get.find();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
