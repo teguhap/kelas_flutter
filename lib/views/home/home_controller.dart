@@ -1,9 +1,12 @@
 import 'package:get/get.dart';
+import 'package:mulai_flutter_2/config/config.dart';
 import 'package:mulai_flutter_2/views/home/model/film_model.dart';
-import 'package:mulai_flutter_2/views/home/service/get_film.dart';
-import 'package:mulai_flutter_2/views/home/service/model/genre_list.dart';
+import 'package:mulai_flutter_2/service/get_film.dart';
+import 'package:mulai_flutter_2/service/model/genre_list.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeController extends GetxController {
+  RxString username = ''.obs;
   RxList<FilmModel> listOfPopularFilm = <FilmModel>[].obs;
   RxList<FilmModel> listOfTopRatedFilm = <FilmModel>[].obs;
   RxList<FilmModel> listOfNowPlaying = <FilmModel>[].obs;
@@ -12,8 +15,11 @@ class HomeController extends GetxController {
   RxBool isLoadingPopular = true.obs;
   RxBool isLoadingNowPlaying = true.obs;
   RxBool isLoadingTopRated = true.obs;
+  late SharedPreferences sharedPreferences;
 
-  void init() {
+  void init() async {
+    sharedPreferences = await SharedPreferences.getInstance();
+    username.value = sharedPreferences.getString('username') ?? 'Good Morning';
     Future.wait([
       getListGenre(),
       getNowPlayingFilm(),
@@ -39,5 +45,6 @@ class HomeController extends GetxController {
 
   Future<void> getListGenre() async {
     listOfGenre.value = await GetFilm().getListGenre();
+    Config.listOfGenres = listOfGenre;
   }
 }

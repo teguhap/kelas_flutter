@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 Color colorPrimary = Color(0xff685CF0);
+Color colorSecondary = Color(0xffF1F0FF);
 
 ThemeData ligthTheme = ThemeData(
   fontFamily: 'Mulish',

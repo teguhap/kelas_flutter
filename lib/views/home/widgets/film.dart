@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:mulai_flutter_2/config/config.dart';
+import 'package:mulai_flutter_2/views/detailfilm/detailfilm_view.dart';
 import 'package:mulai_flutter_2/views/home/model/film_model.dart';
-import 'package:mulai_flutter_2/views/home/service/model/genre_list.dart';
+import 'package:mulai_flutter_2/service/model/genre_list.dart';
 
-class RowFilm extends StatelessWidget {
+class Film extends StatelessWidget {
   FilmModel filmModel;
   List<Genre> listOfGenre;
-  RowFilm({
+  Film({
     super.key,
     required this.filmModel,
     required this.listOfGenre,
@@ -36,7 +38,11 @@ class RowFilm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {},
+      onTap: () {
+        Get.to(DetailfilmView(
+          filmId: filmModel.id ?? 0,
+        ));
+      },
       child: Container(
         width: 120,
         margin: EdgeInsets.only(right: 20),

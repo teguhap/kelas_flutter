@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mulai_flutter_2/config/config.dart';
 import 'package:mulai_flutter_2/theme/theme.dart';
-import 'package:mulai_flutter_2/views/home/controller/home_controller.dart';
+import 'package:mulai_flutter_2/views/home/home_controller.dart';
 import 'package:mulai_flutter_2/views/home/model/film_model.dart';
-import 'package:mulai_flutter_2/views/home/widgets/row_film.dart';
+import 'package:mulai_flutter_2/views/home/widgets/film.dart';
+import 'package:mulai_flutter_2/widgets/row_film.dart';
 
 class HomeView extends GetView<HomeController> {
   String? nama;
@@ -27,8 +28,16 @@ class HomeView extends GetView<HomeController> {
                   _appBar(),
                   _slideImage(),
                   _indicator(),
-                  _rowFilm('Popular Film', controller.listOfPopularFilm),
-                  _rowFilm('Top Film', controller.listOfTopRatedFilm),
+                  RowFilm(
+                      title: 'Popular Film',
+                      listOfFilm: controller.listOfPopularFilm,
+                      listOfGenre: controller.listOfGenre,
+                      isLoadingValue: controller.isLoadingPopular),
+                  RowFilm(
+                      title: 'Top Film',
+                      listOfFilm: controller.listOfTopRatedFilm,
+                      listOfGenre: controller.listOfGenre,
+                      isLoadingValue: controller.isLoadingTopRated),
                 ],
               ),
             ),
@@ -61,7 +70,7 @@ class HomeView extends GetView<HomeController> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Text(
-                    'Hi, ${nama}',
+                    'Hi, ${controller.username}',
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
                   ),
                   SizedBox(
@@ -119,6 +128,7 @@ class HomeView extends GetView<HomeController> {
                   controller.currentIndex.value = realIndex;
                 },
                 itemBuilder: (context, index) {
+                  var realIndex = index % controller.listOfNowPlaying.length;
                   return Container(
                     height: 100,
                     margin: EdgeInsets.symmetric(horizontal: 20),
@@ -154,7 +164,8 @@ class HomeView extends GetView<HomeController> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  controller.listOfNowPlaying[index].title ??
+                                  controller
+                                          .listOfNowPlaying[realIndex].title ??
                                       '',
                                   maxLines: 2,
                                   style: TextStyle(
@@ -168,7 +179,8 @@ class HomeView extends GetView<HomeController> {
                                   height: 10,
                                 ),
                                 Text(
-                                  controller.listOfNowPlaying[index].overview ??
+                                  controller.listOfNowPlaying[realIndex]
+                                          .overview ??
                                       '',
                                   maxLines: 3,
                                   style: TextStyle(
@@ -203,7 +215,7 @@ class HomeView extends GetView<HomeController> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           for (var i = 0; i < controller.listOfNowPlaying.length; i++)
-            controller.currentIndex == i
+            controller.currentIndex.value == i
                 ? Container(
                     width: 24,
                     height: 8,
@@ -221,66 +233,6 @@ class HomeView extends GetView<HomeController> {
                       shape: BoxShape.circle,
                     ),
                   ),
-          // ...listOfColors.map(
-          //   (e) => Container(
-          //     width: 24,
-          //     height: 8,
-          //     margin: EdgeInsets.only(right: 3),
-          //     decoration: BoxDecoration(
-          //         color: colorPrimary,
-          //         borderRadius: BorderRadius.circular(100)),
-          //   ),
-          // ),
-        ],
-      ),
-    );
-  }
-
-  _rowFilm(String title, List<FilmModel> listOfFilm) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                title,
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              Text(
-                'See all',
-                style: TextStyle(
-                  color: colorPrimary,
-                ),
-              ),
-            ],
-          ),
-          SizedBox(
-            height: 20,
-          ),
-          controller.isLoadingPopular.value
-              ? Padding(
-                  padding: EdgeInsets.only(top: 20),
-                  child: CircularProgressIndicator(
-                    color: colorPrimary,
-                  ),
-                )
-              : SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children: [
-                      ...listOfFilm.map(
-                        (film) => RowFilm(
-                          filmModel: film,
-                          listOfGenre: controller.listOfGenre,
-                        ),
-                      ),
-                    ],
-                  ),
-                )
         ],
       ),
     );

@@ -34,6 +34,10 @@ dependencies:
   cupertino_icons: ^1.0.8
   http: ^1.2.2
   get: ^4.6.6
+  carousel_slider: ^5.0.0
+  fluttertoast: ^8.2.8
+  shared_preferences: ^2.3.2
+  youtube_player_flutter: ^9.1.1
 
 dev_dependencies:
   flutter_test:

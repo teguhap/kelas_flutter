@@ -1,12 +1,49 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mulai_flutter_2/theme/theme.dart';
 import 'package:mulai_flutter_2/views/home/home.dart';
+import 'package:mulai_flutter_2/views/main/main_view.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class LoginView extends StatelessWidget {
+class LoginView extends StatefulWidget {
   LoginView({super.key});
+
+  @override
+  State<LoginView> createState() => _LoginViewState();
+}
+
+class _LoginViewState extends State<LoginView> {
+  bool isShowPassword = false;
+
+  String password = '123456';
 
   TextEditingController teEmailController = TextEditingController();
   TextEditingController tePasswordController = TextEditingController();
+  late SharedPreferences sharedPreferences;
+
+  @override
+  void initState() {
+    super.initState();
+    init();
+  }
+
+  init() async {
+    sharedPreferences = await SharedPreferences.getInstance();
+  }
+
+  onLogin() {
+    if (tePasswordController.text == password) {
+      sharedPreferences.setBool('isLogin', true);
+      sharedPreferences.setString('username', teEmailController.text);
+      Get.off(HomeView());
+    } else {
+      Fluttertoast.showToast(
+        msg: 'Password yang anda masukan salah',
+        backgroundColor: colorPrimary,
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -107,7 +144,7 @@ class LoginView extends StatelessWidget {
                 ),
                 TextField(
                   controller: tePasswordController,
-                  obscureText: true,
+                  obscureText: isShowPassword,
                   keyboardType: TextInputType.text,
                   decoration: InputDecoration(
                     fillColor: const Color(0xffD4D7E3).withOpacity(0.4),
@@ -132,6 +169,15 @@ class LoginView extends StatelessWidget {
                     hintStyle: TextStyle(
                       color: Colors.grey.withOpacity(0.6),
                     ),
+                    suffix: InkWell(
+                      onTap: () {
+                        isShowPassword = !isShowPassword;
+                        setState(() {});
+                      },
+                      child: Icon(
+                        Icons.remove_red_eye_outlined,
+                      ),
+                    ),
                   ),
                 ),
                 const SizedBox(
@@ -153,14 +199,7 @@ class LoginView extends StatelessWidget {
                         backgroundColor: const Color(0xff162D3A),
                       ),
                       onPressed: () {
-                        // Navigator.push(
-                        //     context,
-                        //     MaterialPageRoute(
-                        //       builder: (context) => HomeView(
-                        //         nama: teEmailController.text,
-                        //       ),
-                        //     ));
-                        Get.to(HomeView());
+                        onLogin();
                       },
                       child: const Text(
                         'Sign in',

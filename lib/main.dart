@@ -9,6 +9,7 @@ import 'package:mulai_flutter_2/views/login/login_view.dart';
 import 'package:mulai_flutter_2/views/main/main_view.dart';
 import 'package:mulai_flutter_2/views/profile/profile_view.dart';
 import 'package:mulai_flutter_2/views/profile/setting_view.dart';
+import 'package:mulai_flutter_2/views/splashscreen/splashscreen_view.dart';
 
 void main() {
   runApp(const MyApp());
@@ -30,7 +31,7 @@ class MyApp extends StatelessWidget {
         '/setting': (context) => SettingView(),
       },
       initialBinding: MainBinding(),
-      home: MainView(),
+      home: SplashscreenView(),
     );
   }
 }
