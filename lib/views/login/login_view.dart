@@ -36,7 +36,7 @@ class _LoginViewState extends State<LoginView> {
     if (tePasswordController.text == password) {
       sharedPreferences.setBool('isLogin', true);
       sharedPreferences.setString('username', teEmailController.text);
-      Get.off(HomeView());
+      Get.off(MainView());
     } else {
       Fluttertoast.showToast(
         msg: 'Password yang anda masukan salah',
@@ -169,7 +169,7 @@ class _LoginViewState extends State<LoginView> {
                     hintStyle: TextStyle(
                       color: Colors.grey.withOpacity(0.6),
                     ),
-                    suffix: InkWell(
+                    suffixIcon: InkWell(
                       onTap: () {
                         isShowPassword = !isShowPassword;
                         setState(() {});

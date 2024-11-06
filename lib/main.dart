@@ -2,16 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:mulai_flutter_2/config/main_binding.dart';
+import 'package:mulai_flutter_2/helper/database_helper.dart';
 import 'package:mulai_flutter_2/theme/theme.dart';
 import 'package:mulai_flutter_2/views/home/home%20copy.dart';
 import 'package:mulai_flutter_2/views/home/home.dart';
 import 'package:mulai_flutter_2/views/login/login_view.dart';
 import 'package:mulai_flutter_2/views/main/main_view.dart';
-import 'package:mulai_flutter_2/views/profile/profile_view.dart';
-import 'package:mulai_flutter_2/views/profile/setting_view.dart';
+import 'package:mulai_flutter_2/views/profile/profile_detail/profile_view.dart';
 import 'package:mulai_flutter_2/views/splashscreen/splashscreen_view.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await DatabaseHelper.instance.database;
   runApp(const MyApp());
 }
 
@@ -26,9 +28,10 @@ class MyApp extends StatelessWidget {
       theme: ligthTheme,
       routes: {
         '/home': (context) => HomeView(),
-        '/profile': (context) => ProfileView(),
+        '/profile': (context) => ProfileView(
+              isEdit: false,
+            ),
         '/login': (context) => LoginView(),
-        '/setting': (context) => SettingView(),
       },
       initialBinding: MainBinding(),
       home: SplashscreenView(),

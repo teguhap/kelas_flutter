@@ -1,10 +1,10 @@
 import 'dart:convert';
 
 import 'package:get/get.dart';
-// import 'package:http/http.dart';
 import 'package:mulai_flutter_2/config/config.dart';
 import 'package:mulai_flutter_2/service/model/detailfilm_response_json.dart';
 import 'package:mulai_flutter_2/service/model/video_json_model.dart';
+import 'package:mulai_flutter_2/views/detailfilm/model/credits_film_model.dart';
 import 'package:mulai_flutter_2/views/home/model/film_model.dart';
 import 'package:mulai_flutter_2/service/model/genre_list.dart';
 import 'package:mulai_flutter_2/service/model/nowplaying_response_model.dart';
@@ -183,6 +183,25 @@ class GetFilm extends GetConnect {
     } on Exception catch (e) {
       print('Ada Error nih : $e');
       return VideoJsonModel();
+    }
+  }
+
+  Future<CreditsFilmModel> getCreditsFilm(int id) async {
+    String url =
+        '${Config.baseUrl}/3/movie/$id/credits?api_key=${Config.apiKey}';
+    print(url);
+
+    Response response = await get(url);
+    print(response.body);
+
+    if (response.statusCode == 200) {
+      CreditsFilmModel creditsFilmModel =
+          CreditsFilmModel.fromJson(response.body);
+
+      return creditsFilmModel;
+    } else {
+      print('Request failed with status: ${response.statusCode}.');
+      return CreditsFilmModel();
     }
   }
 }

@@ -17,6 +17,7 @@ class MainView extends GetView<MainControlller> {
   _bottomNavigationBar() {
     return BottomNavigationBar(
       showSelectedLabels: false,
+      showUnselectedLabels: false,
       selectedItemColor: colorPrimary,
       unselectedItemColor: Colors.grey,
       onTap: (value) {
@@ -98,13 +99,13 @@ class MainView extends GetView<MainControlller> {
           ),
         ),
         BottomNavigationBarItem(
-          label: 'Explore',
-          icon: Obx(
-            () => IconButton(
-              onPressed: () {
-                controller.currentIndex.value = 2;
-              },
-              icon: Column(
+          label: 'Profile',
+          icon: IconButton(
+            onPressed: () {
+              controller.currentIndex.value = 2;
+            },
+            icon: Obx(
+              () => Column(
                 children: [
                   Image.asset(
                     'assets/icons/ic_home.png',
@@ -113,43 +114,6 @@ class MainView extends GetView<MainControlller> {
                         : Colors.grey,
                   ),
                   controller.currentIndex.value == 2
-                      ? Column(
-                          children: [
-                            SizedBox(
-                              height: 5,
-                            ),
-                            Container(
-                              height: 3,
-                              width: 24,
-                              decoration: BoxDecoration(
-                                color: colorPrimary,
-                                borderRadius: BorderRadius.circular(100),
-                              ),
-                            ),
-                          ],
-                        )
-                      : SizedBox()
-                ],
-              ),
-            ),
-          ),
-        ),
-        BottomNavigationBarItem(
-          label: 'Account',
-          icon: IconButton(
-            onPressed: () {
-              controller.currentIndex.value = 3;
-            },
-            icon: Obx(
-              () => Column(
-                children: [
-                  Image.asset(
-                    'assets/icons/ic_home.png',
-                    color: controller.currentIndex.value == 3
-                        ? colorPrimary
-                        : Colors.grey,
-                  ),
-                  controller.currentIndex.value == 3
                       ? Column(
                           children: [
                             SizedBox(

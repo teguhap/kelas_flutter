@@ -43,7 +43,6 @@ class Result {
   int? size;
   Type? type;
   bool? official;
-  DateTime? publishedAt;
   String? id;
 
   Result({
@@ -53,9 +52,7 @@ class Result {
     this.key,
     this.site,
     this.size,
-    this.type,
     this.official,
-    this.publishedAt,
     this.id,
   });
 
@@ -66,11 +63,7 @@ class Result {
         key: json["key"],
         site: siteValues.map[json["site"]]!,
         size: json["size"],
-        type: typeValues.map[json["type"]]!,
         official: json["official"],
-        publishedAt: json["published_at"] == null
-            ? null
-            : DateTime.parse(json["published_at"]),
         id: json["id"],
       );
 
@@ -81,9 +74,7 @@ class Result {
         "key": key,
         "site": siteValues.reverse[site],
         "size": size,
-        "type": typeValues.reverse[type],
         "official": official,
-        "published_at": publishedAt?.toIso8601String(),
         "id": id,
       };
 }

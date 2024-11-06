@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mulai_flutter_2/config/config.dart';
 import 'package:mulai_flutter_2/views/detailfilm/detailfilm_view.dart';
+import 'package:mulai_flutter_2/views/detailfilm/detailfilm_view.dart';
 import 'package:mulai_flutter_2/views/home/model/film_model.dart';
 import 'package:mulai_flutter_2/service/model/genre_list.dart';
 

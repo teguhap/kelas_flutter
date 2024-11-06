@@ -4,7 +4,7 @@ import 'package:mulai_flutter_2/views/home/home.dart';
 import 'package:mulai_flutter_2/views/explore/views/explore_view.dart';
 import 'package:mulai_flutter_2/views/home/model/film_model.dart';
 import 'package:mulai_flutter_2/service/get_film.dart';
-import 'package:mulai_flutter_2/views/profile/profile_view.dart';
+import 'package:mulai_flutter_2/views/profile/profile_detail/profile_view.dart';
 
 class ExploreController extends GetxController
     with GetTickerProviderStateMixin {

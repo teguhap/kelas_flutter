@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:mulai_flutter_2/theme/theme.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
@@ -23,17 +24,16 @@ class _VideoViewState extends State<VideoView> {
     return OrientationBuilder(builder: (context, orientation) {
       return Scaffold(
         backgroundColor: Colors.black,
-        body: Center(
-          child: Container(
-            child: YoutubePlayer(
-              controller: controller,
-              showVideoProgressIndicator: true,
-              aspectRatio: 16 / 9,
-              progressIndicatorColor: colorPrimary,
-              progressColors: ProgressBarColors(
-                playedColor: colorPrimary,
-                handleColor: colorPrimary,
-              ),
+        body: Container(
+          height: Get.height,
+          child: YoutubePlayer(
+            controller: controller,
+            showVideoProgressIndicator: true,
+            aspectRatio: 16 / 9,
+            progressIndicatorColor: colorPrimary,
+            progressColors: ProgressBarColors(
+              playedColor: colorPrimary,
+              handleColor: colorPrimary,
             ),
           ),
         ),
